@@ -11,13 +11,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
-	public static final int SCREEN_WIDTH = 480;
-	public static final int SCREEN_HEIGHT = 800;
+	public static final float SCREEN_HEIGHT = 425;
+	public static final float PPU = Gdx.graphics.getHeight() / SCREEN_HEIGHT;
+	public static final float SCREEN_WIDTH = Gdx.graphics.getWidth() / PPU;
 	private Game game;
 	private OrthographicCamera camera;
 	private PooledEngine pooledEngine;
 	private Assets assets;
 	private Texture freeway;
+	private GameWorld world;
 
 	public GameScreen(Game game) {
 		this.game = game;
@@ -25,10 +27,11 @@ public class GameScreen implements Screen {
 		pooledEngine = new PooledEngine();
 		assets = new Assets();
 
-		assets.manager.finishLoading();
+		assets.manager.finishLoading(); //Wait for the asset manager finish loading
 
 		camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
 		pooledEngine.addSystem(new RenderSystem(camera, assets));
+		world = new GameWorld(pooledEngine);
 		Texture freewayTexture = assets.manager.get("Freeway.png", Texture.class);
 		Entity freeway = pooledEngine.createEntity();
 		freeway.add(new PositionComponent(0, 0));
