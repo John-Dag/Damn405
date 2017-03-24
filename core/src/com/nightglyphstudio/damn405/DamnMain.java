@@ -16,7 +16,6 @@ public class DamnMain extends Game {
 
 	@Override
 	public void create () {
-		Assets.loadAssets();
 		debugRenderer = new Box2DDebugRenderer();
 		box2dWorld = new World(new Vector2(0, -10), true);
 		rayHandler = new RayHandler(box2dWorld);
