@@ -11,19 +11,21 @@ public class RenderSystem extends EntitySystem {
 	private OrthographicCamera camera;
 	private ComponentMapper<PositionComponent> pm;
 	private ComponentMapper<VisualComponent> vm;
+	private ComponentMapper<MovementComponent> mm;
 	private Assets assets;
 
 	public RenderSystem(OrthographicCamera camera, Assets assets) {
 		batch = new SpriteBatch();
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		vm = ComponentMapper.getFor(VisualComponent.class);
+		mm = ComponentMapper.getFor(MovementComponent.class);
 		this.camera = camera;
 		this.assets = assets;
 	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(Family.all(PositionComponent.class, VisualComponent.class).get());
+		entities = engine.getEntitiesFor(Family.all(PositionComponent.class, VisualComponent.class, MovementComponent.class).get());
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public class RenderSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		PositionComponent positionComponent;
 		VisualComponent visualComponent;
+		MovementComponent movementComponenet;
 
 		if (assets.manager.update()) {
 
@@ -50,6 +53,10 @@ public class RenderSystem extends EntitySystem {
 
 			positionComponent = pm.get(e);
 			visualComponent = vm.get(e);
+			movementComponenet = mm.get(e);
+
+			positionComponent.positionX += movementComponenet.velocityX * deltaTime;
+			positionComponent.positionY += movementComponenet.velocityY * deltaTime;
 
 			batch.draw(visualComponent.region, positionComponent.positionX, positionComponent.positionY);
 		}

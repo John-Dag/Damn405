@@ -31,12 +31,7 @@ public class GameScreen implements Screen {
 
 		camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
 		pooledEngine.addSystem(new RenderSystem(camera, assets));
-		world = new GameWorld(pooledEngine);
-		Texture freewayTexture = assets.manager.get("Freeway.png", Texture.class);
-		Entity freeway = pooledEngine.createEntity();
-		freeway.add(new PositionComponent(0, 0));
-		freeway.add(new VisualComponent(new TextureRegion(freewayTexture)));
-		pooledEngine.addEntity(freeway);
+		world = new GameWorld(pooledEngine, assets);
 	}
 
 	@Override
