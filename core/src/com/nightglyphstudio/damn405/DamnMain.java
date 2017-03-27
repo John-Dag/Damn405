@@ -19,6 +19,7 @@ public class DamnMain extends Game {
 		debugRenderer = new Box2DDebugRenderer();
 		box2dWorld = new World(new Vector2(0, -10), true);
 		rayHandler = new RayHandler(box2dWorld);
+		rayHandler.setShadows(false);
 		ashleyEngine = new Engine();
 		gameScreen = new GameScreen(this);
 		setScreen(gameScreen); //Set the initial screen to the game screen for now. Menu later.

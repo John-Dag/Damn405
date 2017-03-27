@@ -14,5 +14,6 @@ public class Assets {
 	public void loadAssets() {
 		manager.load("Freeway.png", Texture.class);
 		manager.load("ShivyWarship.png", Texture.class);
+		manager.load("pointlight.png", Texture.class);
 	}
 }

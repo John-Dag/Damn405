@@ -1,10 +1,12 @@
 package com.nightglyphstudio.damn405;
 
+import box2dLight.PointLight;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,6 +33,7 @@ public class GameScreen implements Screen {
 
 		camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
 		pooledEngine.addSystem(new RenderSystem(camera, assets));
+		DamnMain.rayHandler.setCombinedMatrix(camera.combined);
 		world = new GameWorld(pooledEngine, assets);
 	}
 
@@ -63,8 +66,9 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
+
+		//DamnMain.rayHandler.updateAndRender();
 	}
 
 	@Override
