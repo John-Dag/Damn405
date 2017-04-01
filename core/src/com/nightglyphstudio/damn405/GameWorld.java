@@ -22,13 +22,14 @@ public class GameWorld extends EntitySystem {
 
 	public void loadEntities() {
 		Texture carTexture = assets.manager.get("ShivyWarship.png", Texture.class);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			float carPositionX = MathUtils.random(GameScreen.SCREEN_WIDTH);
 			float carMovementY = MathUtils.random(50);
 			Entity car = pooledEngine.createEntity();
 			car.add(new PositionComponent(carPositionX, 50));
 			car.add(new MovementComponent(1, carMovementY));
 			car.add(new VisualComponent(new TextureRegion(carTexture)));
+			car.add(new HeadlightComponent());
 			pooledEngine.addEntity(car);
 		}
 	}

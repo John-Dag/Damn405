@@ -8,8 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import javax.swing.text.Position;
+
 public class RenderSystem extends EntitySystem {
-	private ImmutableArray<Entity> entities;
+	public static final float FREEWAY_VELOCITY_Y = 2.0f;
+
+	private ImmutableArray<Entity> carsArray;
+	private Family carsFamily;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ComponentMapper<PositionComponent> pm;
@@ -18,9 +23,14 @@ public class RenderSystem extends EntitySystem {
 	private Assets assets;
 	private Texture headlightTexture;
 	private Sprite headlightSprite;
+	private float freewayPositionY;
+	private float timeSinceLastUpdate;
+	private float frameTime = 1/60;
 
 	public RenderSystem(OrthographicCamera camera, Assets assets) {
 		batch = new SpriteBatch();
+		carsFamily = Family.all(PositionComponent.class, MovementComponent.class,
+						  VisualComponent.class, HeadlightComponent.class).get();
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		vm = ComponentMapper.getFor(VisualComponent.class);
 		mm = ComponentMapper.getFor(MovementComponent.class);
@@ -28,11 +38,13 @@ public class RenderSystem extends EntitySystem {
 		this.assets = assets;
 		headlightTexture = assets.manager.get("pointlight.png");
 		headlightSprite = new Sprite(headlightTexture);
+		freewayPositionY = 0;
+		timeSinceLastUpdate = 0;
 	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(Family.all(PositionComponent.class, MovementComponent.class, VisualComponent.class).get());
+		carsArray = engine.getEntitiesFor(carsFamily);
 	}
 
 	@Override
@@ -42,6 +54,11 @@ public class RenderSystem extends EntitySystem {
 
 	@Override
 	public void update(float deltaTime) {
+		if (timeSinceLastUpdate < frameTime) {
+			return;
+		} else {
+			timeSinceLastUpdate += deltaTime;
+		}
 		PositionComponent positionComponent;
 		VisualComponent visualComponent;
 		MovementComponent movementComponent;
@@ -55,10 +72,16 @@ public class RenderSystem extends EntitySystem {
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		Texture freewayTexture = assets.manager.get("Freeway.png", Texture.class);
-		batch.draw(freewayTexture, 0, 50);
+		batch.draw(freewayTexture, 0, freewayPositionY -= FREEWAY_VELOCITY_Y);
+		if (freewayPositionY < (GameScreen.SCREEN_HEIGHT - freewayTexture.getHeight())) {
+			batch.draw(freewayTexture, 0, freewayPositionY + freewayTexture.getHeight());
+		}
+		if (freewayPositionY < (freewayTexture.getHeight() * -1)) {
+			freewayPositionY = 0;
+		}
 
-		for (int i = 0; i < entities.size(); i++) {
-			Entity e = entities.get(i);
+		for (int i = 0; i < carsArray.size(); i++) {
+			Entity e = carsArray.get(i);
 
 			positionComponent = pm.get(e);
 			visualComponent = vm.get(e);

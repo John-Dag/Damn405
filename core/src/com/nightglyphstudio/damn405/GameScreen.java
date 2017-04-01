@@ -20,7 +20,6 @@ public class GameScreen implements Screen {
 	private OrthographicCamera camera;
 	private PooledEngine pooledEngine;
 	private Assets assets;
-	private Texture freeway;
 	private GameWorld world;
 
 	public GameScreen(Game game) {
