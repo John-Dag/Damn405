@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen implements Screen {
 	public static final float SCREEN_HEIGHT = 425;
@@ -21,6 +23,7 @@ public class GameScreen implements Screen {
 	private PooledEngine pooledEngine;
 	private Assets assets;
 	private GameWorld world;
+	private Vector3 touchPoint;
 
 	public GameScreen(Game game) {
 		this.game = game;
@@ -34,6 +37,7 @@ public class GameScreen implements Screen {
 		pooledEngine.addSystem(new RenderSystem(camera, assets));
 		DamnMain.rayHandler.setCombinedMatrix(camera.combined);
 		world = new GameWorld(pooledEngine, assets);
+		touchPoint = new Vector3();
 	}
 
 	@Override
@@ -63,6 +67,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		//camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
